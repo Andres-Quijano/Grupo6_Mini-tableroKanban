@@ -1,8 +1,7 @@
-# KanbanFlow
+# MIni-tableroKanban
 
-> Sistema web de gestión de tareas ágiles basado en un mini-tablero Kanban y patrones de diseño.
+Sistema web de gestión de tareas ágiles basado en un mini-tablero Kanban y patrones de diseño.
 
-![Estado](https://img.shields.io/badge/estado-Entrega%201-blue) ![Lenguaje](https://img.shields.io/badge/JavaScript-ES6%2B-yellow) ![Pruebas](https://img.shields.io/badge/pruebas-Jest-red)
 
 **Grupo 6** · Proyecto académico de la asignatura **Patrones de Diseño / Construcción de Software** — Universidad Manuela Beltrán, Ingeniería de Software.
 

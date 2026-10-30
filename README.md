@@ -1,7 +1,5 @@
 # Mini-tableroKanban
 
-Sistema web de gestión de tareas ágiles basado en un mini-tablero Kanban y patrones de diseño.
-
 
 **Grupo 6** · Proyecto académico de la asignatura **Patrones de Diseño** — Universidad Manuela Beltrán, Ingeniería de Software.
 

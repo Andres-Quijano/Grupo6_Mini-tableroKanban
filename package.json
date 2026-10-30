@@ -1,0 +1,24 @@
+{
+  "name": "kanbanflow",
+  "version": "0.1.0",
+  "description": "Mini-tablero Kanban para equipos ágiles, construido con patrones de diseño (Observer, Command, Strategy).",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/server.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "keywords": [
+    "kanban",
+    "scrum",
+    "patrones-de-diseno"
+  ],
+  "author": "Andrés Felipe Quijano Niño",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  }
+}

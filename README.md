@@ -37,8 +37,6 @@ y exigiendo checklists de DoR/DoD antes de iniciar o cerrar una tarea.
 | Maria Camila Peralta Perez | Colaborador · Scrum Team | mcamip |
 | Mateho Quesada Bustos | Colaborador · Scrum Team | maquebus-sys |
 
-> Si el equipo tiene más integrantes, agréguelos en esta tabla.
-
 ## 5. Tecnologías seleccionadas
 
 | Tecnología | Uso |
@@ -54,7 +52,7 @@ y exigiendo checklists de DoR/DoD antes de iniciar o cerrar una tarea.
 ## 6. Estructura del repositorio
 
 ```
-KanbanFlow/
+Mini-tableroKanban
 │
 ├── docs/
 │   ├── descripcion_proyecto.md   # Aproximación técnica: módulos, responsabilidades, organización
@@ -67,8 +65,8 @@ KanbanFlow/
 │   ├── domain/                   # Núcleo del dominio (Tarea, Columna, Tablero)
 │   ├── controller/               # Controlador: recibe acciones de la vista
 │   ├── ui/                       # Vista web: dibuja el tablero
-│   ├── notifier/                 # Notificador (Observer) — entrega 2
-│   └── policies/                 # Políticas de negocio (Strategy) — entrega 2
+│   ├── notifier/                 # Notificador (Observer)
+│   └── policies/                 # Políticas de negocio (Strategy)
 │
 ├── tests/
 │   ├── README.md                 # Cómo se organizan y ejecutan las pruebas
@@ -114,8 +112,7 @@ npm test
 - [x] Modelo de dominio: `Task`, `Column`, `Board`.
 - [x] Funcionalidad básica: crear tareas, moverlas entre columnas y validar el límite WIP.
 - [x] Vista web mínima y pruebas unitarias del núcleo.
-- [ ] Patrón **Command** (acciones + deshacer/rehacer) — entrega 2.
-- [ ] Patrón **Observer** (notificaciones en tiempo real) — entrega 2.
-- [ ] Patrón **Strategy** (políticas WIP, DoR y DoD intercambiables) — entrega 2/3.
+- [ ] Patrón **Observer** (notificaciones en tiempo real)
+- [ ] Patrón **Strategy** (políticas WIP, DoR y DoD intercambiables)
 
 Más detalle técnico en [`docs/descripcion_proyecto.md`](docs/descripcion_proyecto.md).

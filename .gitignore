@@ -1,0 +1,18 @@
+# Dependencias
+node_modules/
+
+# Reportes de pruebas
+coverage/
+
+# Logs
+npm-debug.log*
+*.log
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Variables de entorno
+.env

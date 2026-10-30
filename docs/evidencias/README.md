@@ -1,6 +1,6 @@
 # Evidencias — Entrega 1
 
-Guardar aquí las capturas de pantalla solicitadas:
+
 
 | Archivo | Contenido |
 |---|---|

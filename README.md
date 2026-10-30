@@ -22,18 +22,20 @@ Observer y Strategy, para obtener un código mantenible, extensible y fácil de 
 
 Los equipos pequeños que trabajan con metodologías ágiles suelen:
 
-- Perder **visibilidad** del estado real de sus tareas.
-- **Sobrecargarse** iniciando más trabajo del que pueden terminar.
-- Dar por terminadas tareas **incompletas**, sin criterios de calidad acordados.
+- Perder visibilidad del estado real de sus tareas.
+- Sobrecargarse iniciando más trabajo del que pueden terminar.
+- Dar por terminadas tareas incompletas, sin criterios de calidad acordados.
 
-KanbanFlow ataca estos problemas mostrando el flujo en un tablero, bloqueando movimientos que superen el límite WIP
-y (en próximas entregas) exigiendo checklists de DoR/DoD antes de iniciar o cerrar una tarea.
+Mini-tableroKanban ataca estos problemas mostrando el flujo en un tablero, bloqueando movimientos que superen el límite WIP
+y exigiendo checklists de DoR/DoD antes de iniciar o cerrar una tarea.
 
 ## 4. Integrantes del equipo
 
 | Integrante | Rol | Usuario GitHub |
 |---|---|---|
-| Andrés Felipe Quijano Niño | Desarrollador · Scrum Master | [@Andres-Quijano](https://github.com/Andres-Quijano) |
+| Andrés Felipe Quijano Niño | Desarrollador · Scrum Master |
+| Maria Camila Peralta Perez | Colaborador · Scrum Team |
+| Mateho Quesada Bustos | Colaborador · Scrum Team |
 
 > Si el equipo tiene más integrantes, agréguelos en esta tabla.
 

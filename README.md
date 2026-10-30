@@ -4,7 +4,7 @@
 
 ![Estado](https://img.shields.io/badge/estado-Entrega%201-blue) ![Lenguaje](https://img.shields.io/badge/JavaScript-ES6%2B-yellow) ![Pruebas](https://img.shields.io/badge/pruebas-Jest-red)
 
-Proyecto académico de la asignatura **Patrones de Diseño / Construcción de Software** — Universidad Manuela Beltrán, Ingeniería de Software.
+**Grupo 6** · Proyecto académico de la asignatura **Patrones de Diseño / Construcción de Software** — Universidad Manuela Beltrán, Ingeniería de Software.
 
 ---
 
@@ -36,7 +36,7 @@ y (en próximas entregas) exigiendo checklists de DoR/DoD antes de iniciar o cer
 
 | Integrante | Rol | Usuario GitHub |
 |---|---|---|
-| Andrés Felipe Quijano Niño | Desarrollador · Scrum Master | _(agregar usuario)_ |
+| Andrés Felipe Quijano Niño | Desarrollador · Scrum Master | [@Andres-Quijano](https://github.com/Andres-Quijano) |
 
 > Si el equipo tiene más integrantes, agréguelos en esta tabla.
 
@@ -88,8 +88,8 @@ KanbanFlow/
 **Requisitos:** [Node.js](https://nodejs.org/) 18 o superior y Git.
 
 ```bash
-git clone https://github.com/<usuario>/KanbanFlow.git
-cd KanbanFlow
+git clone https://github.com/Andres-Quijano/Grupo6_Mini-tableroKanban.git
+cd Grupo6_Mini-tableroKanban
 npm install
 ```
 

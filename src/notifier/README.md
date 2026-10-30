@@ -1,4 +1,4 @@
-# Notificador — patrón Observer (Entrega 2)
+# Notificador — patrón Observer
 
 Módulo reservado. Aquí se implementará:
 

@@ -114,5 +114,3 @@ npm test
 - [x] Vista web mínima y pruebas unitarias del núcleo.
 - [ ] Patrón **Observer** (notificaciones en tiempo real)
 - [ ] Patrón **Strategy** (políticas WIP, DoR y DoD intercambiables)
-
-Más detalle técnico en [`docs/descripcion_proyecto.md`](docs/descripcion_proyecto.md).

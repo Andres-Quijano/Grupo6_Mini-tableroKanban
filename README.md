@@ -31,7 +31,7 @@ y exigiendo checklists de DoR/DoD antes de iniciar o cerrar una tarea.
 
 ## 4. Integrantes del equipo
 
-| Integrante | Rol | Usuario GitHub |
+| Integrante | Rol |
 |---|---|---|
 | Andrés Felipe Quijano Niño | Desarrollador · Scrum Master |
 | Maria Camila Peralta Perez | Colaborador · Scrum Team |

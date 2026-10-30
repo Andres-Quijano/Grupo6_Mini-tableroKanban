@@ -1,18 +1,18 @@
-# MIni-tableroKanban
+# Mini-tableroKanban
 
 Sistema web de gestión de tareas ágiles basado en un mini-tablero Kanban y patrones de diseño.
 
 
-**Grupo 6** · Proyecto académico de la asignatura **Patrones de Diseño / Construcción de Software** — Universidad Manuela Beltrán, Ingeniería de Software.
+**Grupo 6** · Proyecto académico de la asignatura **Patrones de Diseño** — Universidad Manuela Beltrán, Ingeniería de Software.
 
 ---
 
 ## 1. Descripción
 
-KanbanFlow es una aplicación web sencilla que representa un mini-tablero Kanban de cuatro columnas
-(**Por hacer → En curso → Revisión → Hecho**). Permite a un equipo ágil pequeño visualizar su flujo de trabajo,
-controlar el trabajo en progreso mediante **límites WIP** y, en entregas posteriores, garantizar la calidad con
-**Definición de Listo (DoR)** y **Definición de Hecho (DoD)**.
+Mini-tableroKanban es una aplicación web sencilla que representa un mini-tablero Kanban de cuatro columnas
+(Por hacer → En curso → Revisión → Hecho). Permite a un equipo ágil pequeño visualizar su flujo de trabajo,
+controlar el trabajo en progreso mediante límites WIP y, en entregas posteriores, garantizar la calidad con
+Definición de Listo (DoR) y Definición de Hecho (DoD).
 
 ## 2. Objetivo
 

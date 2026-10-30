@@ -1,4 +1,4 @@
-# Políticas de negocio — patrón Strategy (Entregas 2 y 3)
+# Políticas de negocio — patrón Strategy 
 
 Módulo reservado. Aquí se implementarán las políticas intercambiables:
 

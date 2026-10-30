@@ -16,7 +16,7 @@ Definición de Listo (DoR) y Definición de Hecho (DoD).
 
 Desarrollar una aplicación web de mini-tablero Kanban que permita gestionar el ciclo de vida de las tareas de un
 equipo ágil, aplicando las reglas de Kanban y Scrum (límites WIP, DoR y DoD) mediante los patrones
-**Observer**, **Command** y **Strategy**, para obtener un código mantenible, extensible y fácil de probar.
+Observer y Strategy, para obtener un código mantenible, extensible y fácil de probar.
 
 ## 3. Problema que busca resolver
 

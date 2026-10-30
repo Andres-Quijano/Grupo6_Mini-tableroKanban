@@ -33,9 +33,9 @@ y exigiendo checklists de DoR/DoD antes de iniciar o cerrar una tarea.
 
 | Integrante | Rol | Usuario GitHub |
 |---|---|---|
-| Andrés Felipe Quijano Niño | Desarrollador · Scrum Master | 
-| Maria Camila Peralta Perez | Colaborador · Scrum Team |
-| Mateho Quesada Bustos | Colaborador · Scrum Team |
+| Andrés Felipe Quijano Niño | Desarrollador · Scrum Master | Andres-Quijano |
+| Maria Camila Peralta Perez | Colaborador · Scrum Team | mcamip |
+| Mateho Quesada Bustos | Colaborador · Scrum Team | maquebus-sys |
 
 > Si el equipo tiene más integrantes, agréguelos en esta tabla.
 

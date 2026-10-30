@@ -38,7 +38,7 @@ Usuario ──acción──▶ Vista web (UI) ──▶ Controlador ──ejecut
 | Componente | Carpeta | Patrón previsto |
 |---|---|---|
 | Vista web (UI) | `src/ui/` | — |
-| Controlador | `src/controller/` | **Command** |
+| Controlador | `src/controller/` | — |
 | Núcleo del dominio | `src/domain/` | — |
 | Notificador | `src/notifier/` | **Observer** |
 | Políticas de negocio | `src/policies/` | **Strategy** |
@@ -53,7 +53,6 @@ Usuario ──acción──▶ Vista web (UI) ──▶ Controlador ──ejecut
 ### Controlador — `src/controller/BoardController.js`
 - Recibir las acciones de la vista (crear, mover, eliminar tarea).
 - Invocar al dominio y devolver a la vista un resultado (éxito o mensaje de error).
-- En la entrega 2 cada acción se encapsulará como un **comando** con historial para *deshacer/rehacer*.
 
 ### Núcleo del dominio — `src/domain/`
 - `Task`: representa una tarea y valida sus datos (título obligatorio, prioridad válida).
@@ -91,13 +90,13 @@ oculte, y para que la aplicación se ejecute en cualquier navegador.
 | Entrega | Alcance |
 |---|---|
 | **1 — Base del proyecto** | Repositorio, estructura, documentación, dominio básico (crear y mover tareas, límite WIP), vista mínima y pruebas. |
-| **2 — Patrones de comportamiento** | Command (acciones + deshacer/rehacer) y Observer (notificaciones en tiempo real). |
+| **2 — Patrón Observer** | Notificador con eventos en tiempo real y primera política (límite WIP) con Strategy. |
 | **3 — Políticas y cierre** | Strategy (WIP, DoR, DoD intercambiables), checklists DoR/DoD, diagramas UML y pruebas completas. |
 
 **Control de versiones:**
 
 - Rama `main`: siempre contiene una versión que funciona.
-- Ramas de trabajo por funcionalidad: `feature/<nombre>` (por ejemplo `feature/command-undo`), integradas con
+- Ramas de trabajo por funcionalidad: `feature/<nombre>` (por ejemplo `feature/observer-notificador`), integradas con
   *pull request*.
 - Mensajes de commit con prefijo según el tipo de cambio: `feat:`, `fix:`, `docs:`, `test:`, `chore:`.
 

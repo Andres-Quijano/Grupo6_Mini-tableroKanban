@@ -20,5 +20,5 @@ npm test
 
 - Un archivo `*.test.js` por componente.
 - Cada regla de negocio debe tener al menos un caso exitoso y uno de error.
-- En las siguientes entregas se agregarán pruebas para los comandos (deshacer/rehacer), el notificador y las
+- En las siguientes entregas se agregarán pruebas para el notificador y las
   políticas DoR/DoD.

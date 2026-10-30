@@ -3,9 +3,6 @@
  *
  * Responsabilidad: recibir las acciones del usuario, ejecutarlas sobre el tablero
  * y devolver un resultado simple { ok, message } para que la vista lo muestre.
- *
- * En la entrega 2 cada acción (crear, mover, eliminar) se convertirá en un objeto
- * comando con execute()/undo() y se guardará un historial (patrón Command).
  */
 export class BoardController {
   constructor(board) {

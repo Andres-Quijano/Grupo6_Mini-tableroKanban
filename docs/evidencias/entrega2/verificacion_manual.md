@@ -13,4 +13,4 @@ tareas de ejemplo.
 | 6 | Poner límite WIP 1 en "En curso" cuando tiene 2 tareas | Error *"ya tiene 2 tareas; el límite no puede ser menor"* y el campo vuelve a su valor | Validación |
 | 7 | Poner límite WIP 1 en "Revisión" (con 1 tarea) | Se notifica el cambio y la advertencia *"llegó a su límite WIP"*; la columna se marca en rojo | Observer |
 | 8 | Abrir la página a 375 px de ancho (celular) y a 1024 px | Sin desplazamiento horizontal; las columnas se acomodan | — | 
-| 9 | Consola del navegador | Sin errores | — | ✅ |
+| 9 | Consola del navegador | Sin errores | — | |

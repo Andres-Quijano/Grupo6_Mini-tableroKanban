@@ -1,8 +1,8 @@
 /**
  * Column — una columna del tablero (un estado del flujo).
  *
- * Responsabilidad: agrupar las tareas que están en ese estado y conocer su límite WIP.
- * En la entrega 2 la validación del límite se moverá a una política (patrón Strategy).
+ * Responsabilidad: agrupar las tareas que están en ese estado y conocer su
+ * límite WIP. La decisión de bloquear un movimiento la toma WipLimitPolicy.
  */
 export class Column {
   /**
@@ -15,6 +15,10 @@ export class Column {
     this.name = name;
     this.wipLimit = wipLimit;
     this.tasks = [];
+  }
+
+  get hasWipLimit() {
+    return this.wipLimit !== Infinity;
   }
 
   /** true si la columna todavía admite otra tarea. */

@@ -1,16 +1,21 @@
 /**
  * Board — el tablero Kanban (núcleo del dominio).
  *
- * Responsabilidad: contener las columnas y aplicar las reglas del flujo:
- *   - las tareas nuevas entran en la primera columna;
- *   - una tarea solo avanza o retrocede una columna a la vez;
- *   - no se puede mover una tarea a una columna que alcanzó su límite WIP.
+ * Responsabilidad: contener las columnas y las tareas, y coordinar los cambios.
+ *  - Las reglas de movimiento NO están aquí: se delegan a la lista de políticas
+ *    (patrón Strategy, ver src/policies/).
+ *  - Cada cambio se anuncia en el EventBus (patrón Observer, ver src/notifier/),
+ *    sin que el tablero sepa quién lo escucha.
  *
- * El estado vive en memoria. En la entrega 2 este módulo publicará eventos
- * (tarea movida, WIP excedido) para el Notificador (patrón Observer).
+ * Ambas dependencias se reciben en el constructor, lo que permite probar el
+ * tablero con otras políticas o con un EventBus de prueba.
  */
 import { Task } from './Task.js';
 import { Column } from './Column.js';
+import { EventBus } from '../notifier/EventBus.js';
+import { EVENTS } from '../notifier/events.js';
+import { createDefaultPolicies } from '../policies/index.js';
+import { DomainError, PolicyViolationError } from '../utils/errors.js';
 
 /** Columnas por defecto del flujo con su límite WIP inicial. */
 export const DEFAULT_COLUMNS = [
@@ -21,20 +26,30 @@ export const DEFAULT_COLUMNS = [
 ];
 
 export class Board {
-  constructor(columns = DEFAULT_COLUMNS) {
+  /**
+   * @param {object}   [options]
+   * @param {object[]} [options.columns]  Definición de columnas { id, name, wipLimit }.
+   * @param {import('../policies/MovePolicy.js').MovePolicy[]} [options.policies]
+   * @param {EventBus} [options.events]
+   */
+  constructor({ columns = DEFAULT_COLUMNS, policies = createDefaultPolicies(), events = new EventBus() } = {}) {
     this.columns = columns.map((c) => new Column(c.id, c.name, c.wipLimit));
+    this.policies = [...policies];
+    this.events = events;
   }
+
+  // ---------- Consultas ----------
 
   getColumn(columnId) {
     const column = this.columns.find((c) => c.id === columnId);
-    if (!column) throw new Error(`No existe la columna "${columnId}".`);
+    if (!column) throw new DomainError(`No existe la columna "${columnId}".`);
     return column;
   }
 
   /** Devuelve la columna que contiene la tarea, o lanza error si no existe. */
   findColumnOf(taskId) {
     const column = this.columns.find((c) => c.has(taskId));
-    if (!column) throw new Error(`No existe la tarea #${taskId}.`);
+    if (!column) throw new DomainError(`No existe la tarea #${taskId}.`);
     return column;
   }
 
@@ -42,40 +57,62 @@ export class Board {
     return this.findColumnOf(taskId).tasks.find((t) => t.id === taskId);
   }
 
+  get tasks() {
+    return this.columns.flatMap((c) => c.tasks);
+  }
+
+  // ---------- Políticas (Strategy) ----------
+
+  addPolicy(policy) {
+    this.policies.push(policy);
+  }
+
+  /** Quita las políticas de la clase indicada (por ejemplo, desactivar DoD). */
+  removePolicy(PolicyClass) {
+    this.policies = this.policies.filter((p) => !(p instanceof PolicyClass));
+  }
+
+  // ---------- Operaciones sobre tareas ----------
+
   /** Crea una tarea y la coloca en la primera columna ("Por hacer"). */
   createTask(data) {
-    const first = this.columns[0];
-    if (!first.hasCapacity()) {
-      throw new Error(`"${first.name}" alcanzó su límite WIP (${first.wipLimit}).`);
-    }
     const task = new Task(data);
-    first.add(task);
+    const column = this.columns[0];
+    this.#enforcePolicies({ task, from: null, to: column });
+
+    column.add(task);
+    this.events.publish(EVENTS.TASK_CREATED, { task, column });
+    this.#announceIfFull(column);
+    return task;
+  }
+
+  updateTask(taskId, data) {
+    const task = this.findTask(taskId);
+    const changes = task.update(data);
+    this.events.publish(EVENTS.TASK_UPDATED, { task, changes });
     return task;
   }
 
   deleteTask(taskId) {
-    return this.findColumnOf(taskId).remove(taskId);
+    const column = this.findColumnOf(taskId);
+    const task = column.remove(taskId);
+    this.events.publish(EVENTS.TASK_DELETED, { task, column });
+    return task;
   }
 
-  /**
-   * Mueve una tarea a la columna indicada.
-   * Solo se permite moverla a la columna vecina (anterior o siguiente).
-   */
+  /** Mueve una tarea a la columna indicada si todas las políticas lo permiten. */
   moveTask(taskId, targetColumnId) {
     const from = this.findColumnOf(taskId);
     const to = this.getColumn(targetColumnId);
-    if (from === to) return this.findTask(taskId);
+    const task = this.findTask(taskId);
+    if (from === to) return task;
 
-    const distance = Math.abs(this.columns.indexOf(to) - this.columns.indexOf(from));
-    if (distance !== 1) {
-      throw new Error(`Solo se puede mover a una columna vecina de "${from.name}".`);
-    }
-    if (!to.hasCapacity()) {
-      throw new Error(`"${to.name}" alcanzó su límite WIP (${to.wipLimit}).`);
-    }
+    this.#enforcePolicies({ task, from, to });
 
-    const task = from.remove(taskId);
+    from.remove(taskId);
     to.add(task);
+    this.events.publish(EVENTS.TASK_MOVED, { task, from, to });
+    this.#announceIfFull(to);
     return task;
   }
 
@@ -83,13 +120,54 @@ export class Board {
   shiftTask(taskId, step) {
     const index = this.columns.indexOf(this.findColumnOf(taskId)) + step;
     if (index < 0 || index >= this.columns.length) {
-      throw new Error('La tarea no puede moverse más en esa dirección.');
+      throw new DomainError('La tarea no puede moverse más en esa dirección.');
     }
     return this.moveTask(taskId, this.columns[index].id);
   }
 
+  toggleChecklistItem(taskId, type, itemId) {
+    const task = this.findTask(taskId);
+    const item = task.toggleChecklistItem(type, itemId);
+    this.events.publish(EVENTS.CHECKLIST_TOGGLED, { task, type, item });
+    return item;
+  }
+
+  /**
+   * Cambia el límite WIP de una columna.
+   * @param {number} limit Entero ≥ 1, o Infinity para quitar el límite.
+   */
   setWipLimit(columnId, limit) {
-    if (!(limit > 0)) throw new Error('El límite WIP debe ser mayor que cero.');
-    this.getColumn(columnId).wipLimit = limit;
+    const column = this.getColumn(columnId);
+    if (limit !== Infinity && !(Number.isInteger(limit) && limit > 0)) {
+      throw new DomainError('El límite WIP debe ser un número entero mayor que cero.');
+    }
+    if (limit < column.tasks.length) {
+      throw new DomainError(
+        `"${column.name}" ya tiene ${column.tasks.length} tareas; el límite no puede ser menor.`,
+      );
+    }
+    column.wipLimit = limit;
+    this.events.publish(EVENTS.WIP_LIMIT_CHANGED, { column });
+    this.#announceIfFull(column);
+    return column;
+  }
+
+  // ---------- Internos ----------
+
+  /** Pregunta a cada política; la primera que rechace detiene la operación. */
+  #enforcePolicies(context) {
+    for (const policy of this.policies) {
+      const reason = policy.validate({ ...context, board: this });
+      if (reason) {
+        this.events.publish(EVENTS.MOVE_REJECTED, { ...context, policy: policy.name, reason });
+        throw new PolicyViolationError(reason, policy.name);
+      }
+    }
+  }
+
+  #announceIfFull(column) {
+    if (column.hasWipLimit && !column.hasCapacity()) {
+      this.events.publish(EVENTS.WIP_LIMIT_REACHED, { column });
+    }
   }
 }

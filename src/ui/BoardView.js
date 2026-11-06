@@ -1,94 +1,95 @@
 /**
- * BoardView — vista web del tablero.
+ * BoardView — vista web del tablero (observador del EventBus).
  *
- * Responsabilidad: dibujar columnas y tarjetas, leer el formulario y mostrar alertas.
- * No contiene reglas de negocio: todo lo delega en el controlador.
+ * Responsabilidad: dibujar columnas y tarjetas y traducir los clics del usuario
+ * en llamadas al controlador. No contiene reglas de negocio.
  *
- * Hoy la vista se redibuja manualmente después de cada acción; en la entrega 2
- * se suscribirá al Notificador y se actualizará sola (patrón Observer).
+ * No se redibuja "a mano" después de cada acción: se suscribe a todos los
+ * eventos del tablero y se actualiza cuando el dominio anuncia un cambio.
  */
+import { ANY_EVENT } from '../notifier/EventBus.js';
+import { EVENTS } from '../notifier/events.js';
+import { columnTemplate } from './templates.js';
+
 export class BoardView {
-  constructor(root, board, controller) {
-    this.root = root;
+  /** Tarjetas con los checklists desplegados, para mantenerlas abiertas al redibujar. */
+  #openTaskIds = new Set();
+
+  /**
+   * @param {HTMLElement} element  Contenedor del tablero.
+   * @param {object} deps
+   * @param {import('../domain/Board.js').Board} deps.board
+   * @param {import('../controller/BoardController.js').BoardController} deps.controller
+   * @param {import('../notifier/EventBus.js').EventBus} deps.events
+   * @param {(task) => void} deps.onEditTask    Se llama al pulsar ✎.
+   * @param {(message: string) => void} deps.onError  Errores que no anunció el Notificador.
+   */
+  constructor(element, { board, controller, events, onEditTask, onError }) {
+    this.element = element;
     this.board = board;
     this.controller = controller;
-    this.boardEl = root.querySelector('#board');
-    this.alertsEl = root.querySelector('#alerts');
-    this.form = root.querySelector('#task-form');
+    this.onEditTask = onEditTask;
+    this.onError = onError;
 
-    this.form.addEventListener('submit', (e) => this.#onSubmit(e));
-    this.boardEl.addEventListener('click', (e) => this.#onBoardClick(e));
+    events.subscribe(ANY_EVENT, (event) => {
+      if (event.name !== EVENTS.MOVE_REJECTED) this.render();
+    });
+
+    element.addEventListener('click', (e) => this.#onClick(e));
+    element.addEventListener('change', (e) => this.#onChange(e));
+    // "toggle" no burbujea; se escucha en fase de captura.
+    element.addEventListener('toggle', (e) => this.#onDetailsToggle(e), true);
   }
 
   render() {
-    this.boardEl.innerHTML = this.board.columns.map((column) => this.#columnHtml(column)).join('');
+    const last = this.board.columns.length - 1;
+    this.element.innerHTML = this.board.columns
+      .map((column, index) =>
+        columnTemplate(column, { isFirst: index === 0, isLast: index === last, openTaskIds: this.#openTaskIds }),
+      )
+      .join('');
   }
 
-  showAlert({ ok, message }) {
-    const item = document.createElement('li');
-    item.className = ok ? 'alert alert--ok' : 'alert alert--error';
-    item.textContent = message;
-    this.alertsEl.prepend(item);
-    while (this.alertsEl.children.length > 5) this.alertsEl.lastChild.remove();
-  }
-
-  #onSubmit(event) {
-    event.preventDefault();
-    const data = Object.fromEntries(new FormData(this.form));
-    const result = this.controller.createTask(data);
-    this.showAlert(result);
-    if (result.ok) this.form.reset();
-    this.render();
-  }
-
-  #onBoardClick(event) {
+  #onClick(event) {
     const button = event.target.closest('button[data-action]');
     if (!button) return;
     const taskId = Number(button.dataset.task);
-    const action = button.dataset.action;
 
-    const result =
-      action === 'delete'
-        ? this.controller.deleteTask(taskId)
-        : this.controller.moveTask(taskId, action === 'next' ? 1 : -1);
-    this.showAlert(result);
-    this.render();
+    switch (button.dataset.action) {
+      case 'next':
+        return this.#handle(this.controller.moveTask(taskId, 1));
+      case 'prev':
+        return this.#handle(this.controller.moveTask(taskId, -1));
+      case 'delete':
+        if (confirm(`¿Eliminar la tarea #${taskId}?`)) this.#handle(this.controller.deleteTask(taskId));
+        return;
+      case 'edit':
+        return this.onEditTask(this.board.findTask(taskId));
+    }
   }
 
-  #columnHtml(column) {
-    const limit = column.wipLimit === Infinity ? '∞' : column.wipLimit;
-    const full = !column.hasCapacity();
-    return `
-      <section class="column ${full ? 'column--full' : ''}" data-column="${column.id}">
-        <header class="column__header">
-          <h2>${column.name}</h2>
-          <span class="wip" title="Tareas / límite WIP">${column.tasks.length} / ${limit}</span>
-        </header>
-        <ul class="column__tasks">
-          ${column.tasks.map((task) => this.#taskHtml(task)).join('') || '<li class="empty">Sin tareas</li>'}
-        </ul>
-      </section>`;
+  #onChange(event) {
+    const input = event.target;
+    if (input.dataset.action === 'toggle') {
+      const { task, type, item } = input.dataset;
+      this.#handle(this.controller.toggleChecklistItem(Number(task), type, item));
+    } else if (input.dataset.wip) {
+      const result = this.controller.setWipLimit(input.dataset.wip, input.value);
+      // Si el límite no es válido, se vuelve a dibujar para restaurar el valor anterior.
+      if (!result.ok) this.render();
+      this.#handle(result);
+    }
   }
 
-  #taskHtml(task) {
-    return `
-      <li class="card card--${task.priority}">
-        <div class="card__title">#${task.id} ${escapeHtml(task.title)}</div>
-        ${task.description ? `<p class="card__desc">${escapeHtml(task.description)}</p>` : ''}
-        <div class="card__meta">
-          <span>${escapeHtml(task.assignee)}</span>
-          <span class="badge">${task.priority}</span>
-        </div>
-        <div class="card__actions">
-          <button data-action="prev" data-task="${task.id}" title="Mover a la columna anterior">←</button>
-          <button data-action="delete" data-task="${task.id}" title="Eliminar">✕</button>
-          <button data-action="next" data-task="${task.id}" title="Mover a la columna siguiente">→</button>
-        </div>
-      </li>`;
+  #onDetailsToggle(event) {
+    const details = event.target;
+    if (!details.matches?.('details[data-task]')) return;
+    const taskId = Number(details.dataset.task);
+    if (details.open) this.#openTaskIds.add(taskId);
+    else this.#openTaskIds.delete(taskId);
   }
-}
 
-/** Evita que el texto escrito por el usuario se interprete como HTML. */
-function escapeHtml(text) {
-  return text.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
+  #handle(result) {
+    if (!result.ok && !result.notified) this.onError(result.message);
+  }
 }

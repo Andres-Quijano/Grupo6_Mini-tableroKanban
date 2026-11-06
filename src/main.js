@@ -1,24 +1,40 @@
 /**
- * main.js — punto de entrada de KanbanFlow.
+ * main.js — punto de entrada de Mini-tableroKanban.
  *
- * Arma las capas de la aplicación:
- *   Board (dominio) → BoardController (controlador) → BoardView (vista)
- * y carga unas tareas de ejemplo para que el tablero no arranque vacío.
+ * Crea los objetos y los conecta (composición de dependencias):
+ *
+ *   EventBus ─┬─▶ Board (publica eventos, valida con las políticas Strategy)
+ *             ├─▶ BoardView          (observador: redibuja el tablero)
+ *             └─▶ NotificationPanel  (observador: muestra alertas)
+ *
+ *   BoardView / TaskForm ──▶ BoardController ──▶ Board
  */
+import { EventBus } from './notifier/EventBus.js';
 import { Board } from './domain/Board.js';
+import { createDefaultPolicies } from './policies/index.js';
 import { BoardController } from './controller/BoardController.js';
 import { BoardView } from './ui/BoardView.js';
+import { TaskForm } from './ui/TaskForm.js';
+import { NotificationPanel } from './ui/NotificationPanel.js';
+import { loadSampleTasks } from './data/sampleTasks.js';
 
-const board = new Board();
+const events = new EventBus();
+const board = new Board({ events, policies: createDefaultPolicies() });
 const controller = new BoardController(board);
-const view = new BoardView(document.body, board, controller);
 
-// Datos de ejemplo (el estado vive en memoria; se pierde al recargar).
-const t1 = board.createTask({ title: 'Configurar repositorio en GitHub', assignee: 'usuario_01', priority: 'alta' });
-const t2 = board.createTask({ title: 'Diseñar diagrama de clases', assignee: 'usuario_02', priority: 'media' });
-board.createTask({ title: 'Definir checklist DoD', assignee: 'usuario_01', priority: 'baja' });
-board.shiftTask(t1.id, 1);
-board.shiftTask(t1.id, 1);
-board.shiftTask(t2.id, 1);
+// Los datos de ejemplo se cargan antes de suscribir a los observadores,
+// para no llenar el panel con notificaciones de la carga inicial.
+loadSampleTasks(board);
+
+const notifications = new NotificationPanel(document.getElementById('alerts'), events);
+const form = new TaskForm(document.getElementById('task-form'), controller);
+const view = new BoardView(document.getElementById('board'), {
+  board,
+  controller,
+  events,
+  onEditTask: (task) => form.edit(task),
+  onError: (message) => notifications.push('error', message),
+});
 
 view.render();
+notifications.push('info', 'Tablero listo. Las políticas activas son: ' + board.policies.map((p) => p.name).join(', ') + '.');

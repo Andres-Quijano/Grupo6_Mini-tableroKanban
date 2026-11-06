@@ -3,7 +3,7 @@
 Ejecución con `npm start` y `http://localhost:3000`. Cada caso se hizo sobre el tablero recién cargado con las
 tareas de ejemplo.
 
-| # | Caso | Resultado esperado | Patrón | 
+| # | Caso | Resultado esperado | Patrón ||
 |---|---|---|---|---|
 | 1 | Pulsar `→` en "#3 Definir checklist DoD" con la DoR incompleta | La tarea no se mueve; aparece *Bloqueado [Definición de Listo]* con los ítems que faltan | Strategy + Observer | 
 | 2 | Marcar los ítems pendientes de la DoR de #3 y pulsar `→` | La tarea pasa a "En curso" y se notifica el movimiento | Strategy + Observer | 

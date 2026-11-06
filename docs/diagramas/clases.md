@@ -46,9 +46,12 @@ classDiagram
     }
 
     class EventBus {
+        -subscribers: Map
+        -onError: Function
         +subscribe(eventName, handler) Function
         +unsubscribe(eventName, handler)
-        +publish(eventName, payload)
+        +publish(eventName, payload) Event
+        +subscriberCount(eventName) number
     }
 
     class MovePolicy {
@@ -56,11 +59,31 @@ classDiagram
         +name: string
         +validate(context) string
     }
-    class AdjacentColumnPolicy
-    class WipLimitPolicy
-    class ChecklistPolicy
-    class DefinitionOfReadyPolicy
-    class DefinitionOfDonePolicy
+    class AdjacentColumnPolicy {
+        +name: string
+        +validate(context) string
+    }
+    class WipLimitPolicy {
+        +name: string
+        +validate(context) string
+    }
+    class ChecklistPolicy {
+        +checklistType: string
+        +targetColumnId: string
+        +name: string
+        +validate(context) string
+        -isForwardMove(from, to, board) boolean
+    }
+    class DefinitionOfReadyPolicy {
+        +checklistType: dor
+        +targetColumnId: doing
+        +DefinitionOfReadyPolicy(targetColumnId)
+    }
+    class DefinitionOfDonePolicy {
+        +checklistType: dod
+        +targetColumnId: done
+        +DefinitionOfDonePolicy(targetColumnId)
+    }
 
     class BoardController {
         +createTask(formData)
@@ -72,19 +95,38 @@ classDiagram
     }
 
     class BoardView {
+        +element: HTMLElement
+        +board: Board
+        +controller: BoardController
+        -openTaskIds: Set
         +render()
+        -onClick(event)
+        -onChange(event)
+        -handle(result)
     }
     class TaskForm {
+        +form: HTMLFormElement
+        +controller: BoardController
+        -editingId: number
         +edit(task)
         +reset()
+        -onSubmit(event)
+        -showError(message)
     }
     class NotificationPanel {
-        +push(type, text)
+        +list: HTMLUListElement
+        +push(type, text, timestamp)
     }
 
-    class DomainError
+    class DomainError {
+        +name: string
+        +message: string
+        +DomainError(message)
+    }
     class PolicyViolationError {
+        +name: string
         +policyName: string
+        +PolicyViolationError(message, policyName)
     }
 
     Board "1" *-- "4" Column

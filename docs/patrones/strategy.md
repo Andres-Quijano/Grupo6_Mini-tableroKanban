@@ -60,14 +60,31 @@ classDiagram
         +name: string
         +validate(context) string
     }
-    class AdjacentColumnPolicy
-    class WipLimitPolicy
-    class ChecklistPolicy {
-        +checklistType
-        +targetColumnId
+    class AdjacentColumnPolicy {
+        +name: string
+        +validate(context) string
     }
-    class DefinitionOfReadyPolicy
-    class DefinitionOfDonePolicy
+    class WipLimitPolicy {
+        +name: string
+        +validate(context) string
+    }
+    class ChecklistPolicy {
+        +checklistType: string
+        +targetColumnId: string
+        +name: string
+        +validate(context) string
+        -isForwardMove(from, to, board) boolean
+    }
+    class DefinitionOfReadyPolicy {
+        +checklistType: dor
+        +targetColumnId: doing
+        +DefinitionOfReadyPolicy(targetColumnId)
+    }
+    class DefinitionOfDonePolicy {
+        +checklistType: dod
+        +targetColumnId: done
+        +DefinitionOfDonePolicy(targetColumnId)
+    }
 
     Board o-- "0..*" MovePolicy : usa
     MovePolicy <|-- AdjacentColumnPolicy

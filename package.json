@@ -1,11 +1,12 @@
 {
   "name": "kanbanflow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Mini-tablero Kanban para equipos ágiles, construido con patrones de diseño (Observer y Strategy).",
   "type": "module",
   "scripts": {
     "start": "node scripts/server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/ui/** --collectCoverageFrom=!src/main.js"
   },
   "keywords": [
     "kanban",

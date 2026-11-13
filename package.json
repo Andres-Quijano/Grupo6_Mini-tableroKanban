@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node scripts/server.js",
+    "build:exe": "node scripts/build-exe.mjs",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/ui/** --collectCoverageFrom=!src/main.js"
   },
@@ -16,7 +17,8 @@
   "author": "Andrés Felipe Quijano Niño",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "postject": "^1.0.0-alpha.6"
   },
   "jest": {
     "testEnvironment": "node",

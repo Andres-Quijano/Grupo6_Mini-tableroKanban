@@ -16,3 +16,6 @@ Thumbs.db
 
 # Variables de entorno
 .env
+
+# Ejecutable generado (npm run build:exe)
+dist/

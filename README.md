@@ -107,7 +107,9 @@ Grupo6_Mini-tableroKanban/
 │
 ├── tests/                            # 6 archivos de pruebas Jest + helpers
 ├── scripts/
-│   └── server.js                     # Servidor estático local (sin dependencias)
+│   ├── server.js                     # Servidor estático local para desarrollo (npm start)
+│   ├── launcher.cjs                  # Punto de entrada del ejecutable: sirve la app y abre el navegador
+│   └── build-exe.mjs                 # Genera dist/MiniTableroKanban.exe (npm run build:exe)
 │
 ├── package.json
 ├── README.md
@@ -225,7 +227,26 @@ Abrir `http://localhost:3000`. El tablero carga tres tareas de ejemplo. Para pro
 2. Desplegar `DoR 1/3` en la tarjeta, marcar los ítems y volver a pulsar `→`: ahora avanza.
 3. Escribir `1` en el límite WIP de "Revisión": aparece la advertencia de columna llena.
 
-> Abrir `index.html` con doble clic no funciona porque los módulos ES requieren un servidor; use `npm start`.
+> Abrir `index.html` con doble clic no funciona porque los módulos ES requieren un servidor; use `npm start`
+> o el ejecutable.
+
+**Generar el ejecutable para Windows:**
+
+```bash
+npm run build:exe
+```
+
+Crea `dist/MiniTableroKanban.exe` (unos 90 MB), que **no necesita Node.js instalado**: al abrirlo con doble clic
+levanta el servidor, abre el tablero en el navegador y muestra una ventana de consola; al cerrarla se detiene la
+aplicación. Si el puerto 3000 está ocupado usa el siguiente libre (3001, 3002…).
+
+- Se construye con [Single Executable Applications](https://nodejs.org/api/single-executable-applications.html) de
+  Node.js: `scripts/build-exe.mjs` empaqueta `scripts/launcher.cjs` y los archivos de `src/` dentro de una copia de
+  Node.js.
+- El ejecutable funciona en el sistema operativo donde se compiló (compilado en Windows → `.exe` para Windows).
+- No está firmado digitalmente: Windows puede mostrar el aviso *"Windows protegió su PC"*. Se abre con
+  **Más información → Ejecutar de todas formas**.
+- `dist/` no se sube al repositorio por su tamaño; el `.exe` se distribuye aparte (por ejemplo, en *Releases*).
 
 **Ejecutar las pruebas:**
 

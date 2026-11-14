@@ -17,6 +17,9 @@ import { BoardView } from './ui/BoardView.js';
 import { TaskForm } from './ui/TaskForm.js';
 import { NotificationPanel } from './ui/NotificationPanel.js';
 import { loadSampleTasks } from './data/sampleTasks.js';
+import { initLanding } from './ui/landing.js';
+
+initLanding();
 
 const events = new EventBus();
 const board = new Board({ events, policies: createDefaultPolicies() });

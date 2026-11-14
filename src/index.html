@@ -3,44 +3,226 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mini-tablero Kanban</title>
+    <meta name="description" content="Mini-tablero Kanban: límites WIP, Definición de Listo y Definición de Hecho aplicados con los patrones Strategy y Observer." />
+    <meta name="color-scheme" content="light dark" />
+    <title>Mini-tablero Kanban · Grupo 6</title>
+    <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="assets/icons/icons.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <h1>Mini-tablero <span>Kanban</span></h1>
-      <p>Grupo 6 · Gestión de tareas ágiles con límites WIP, DoR y DoD</p>
+    <a class="skip-link" href="#tablero">Saltar al tablero</a>
+
+    <header class="nav">
+      <div class="nav__inner">
+        <a class="brand" href="#inicio" aria-label="Mini-tablero Kanban, inicio">
+          <span class="brand__seal" aria-hidden="true">看</span>
+          <span class="brand__name">Mini-tablero <strong>Kanban</strong></span>
+        </a>
+        <nav class="nav__links" aria-label="Secciones">
+          <a href="#reglas">Reglas</a>
+          <a href="#patrones">Patrones</a>
+          <a href="#tablero">Tablero</a>
+        </nav>
+        <a class="btn btn--primary btn--sm" href="#tablero">Abrir tablero</a>
+      </div>
     </header>
 
-    <main class="layout">
-      <aside class="sidebar">
-        <form id="task-form" class="panel" novalidate>
-          <h2 data-role="title">Nueva tarea</h2>
-          <label>Título <input name="title" required maxlength="80" /></label>
-          <label>Descripción <textarea name="description" rows="2" maxlength="200"></textarea></label>
-          <label>Responsable <input name="assignee" placeholder="usuario_01" maxlength="40" /></label>
-          <label>Prioridad
-            <select name="priority">
-              <option value="baja">Baja</option>
-              <option value="media" selected>Media</option>
-              <option value="alta">Alta</option>
-            </select>
-          </label>
-          <p class="form-error" data-role="error" role="alert" hidden></p>
-          <div class="form-actions">
-            <button type="submit">Crear tarea</button>
-            <button type="button" class="secondary" data-role="cancel" hidden>Cancelar</button>
+    <main>
+      <!-- Portada -->
+      <section class="hero" id="inicio">
+        <div class="hero__copy">
+          <p class="eyebrow">Grupo 6 · Patrones de Diseño UMB</p>
+          <h1 class="hero__title">El tablero pone las <em>reglas</em>.</h1>
+          <p class="hero__lead">
+            Límites WIP, Definición de Listo y Definición de Hecho aplicados en cada movimiento, con avisos en tiempo real.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#tablero">Abrir tablero <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+            <a class="btn btn--ghost" href="#reglas">Cómo funciona</a>
           </div>
-        </form>
-
-        <div class="panel">
-          <h2>Notificaciones</h2>
-          <ul id="alerts" class="alerts" aria-live="polite"></ul>
         </div>
-      </aside>
 
-      <div id="board" class="board"></div>
+        <div class="hero__art" aria-hidden="true">
+          <span class="hero__kanji"><span>看板</span></span>
+          <div class="hero__stack">
+            <article class="card card--media hero__card hero__card--back">
+              <div class="card__top"><span class="card__id">#02</span><span class="card__priority">media</span></div>
+              <p class="card__title">Diseñar diagrama de clases</p>
+              <p class="card__assignee"><i class="ph ph-user"></i>usuario_02</p>
+            </article>
+            <article class="card card--alta hero__card hero__card--front">
+              <div class="card__top"><span class="card__id">#01</span><span class="card__priority">alta</span></div>
+              <p class="card__title">Configurar repositorio en GitHub</p>
+              <p class="card__assignee"><i class="ph ph-user"></i>usuario_01</p>
+              <div class="checks checks--static">
+                <span class="progress is-complete"><span class="progress__label">DoR</span><span class="progress__ticks"><i></i><i></i><i></i></span></span>
+                <span class="progress is-complete"><span class="progress__label">DoD</span><span class="progress__ticks"><i></i><i></i><i></i></span></span>
+              </div>
+              <span class="seal seal--hero">済</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reglas -->
+      <section class="rules" id="reglas" data-reveal>
+        <h2 class="section-title">Cuatro columnas. Cuatro reglas que nadie se salta.</h2>
+
+        <ol class="rail" aria-label="Flujo del tablero">
+          <li class="rail__stage">
+            <span class="rail__mark" aria-hidden="true">未</span>
+            <span class="rail__name">Por hacer</span>
+            <span class="rail__meta">Sin límite</span>
+          </li>
+          <li class="rail__gate"><span>Exige DoR</span></li>
+          <li class="rail__stage">
+            <span class="rail__mark" aria-hidden="true">進</span>
+            <span class="rail__name">En curso</span>
+            <span class="rail__meta">Máximo 3</span>
+          </li>
+          <li class="rail__gate rail__gate--plain"><span>Revisar</span></li>
+          <li class="rail__stage">
+            <span class="rail__mark" aria-hidden="true">査</span>
+            <span class="rail__name">Revisión</span>
+            <span class="rail__meta">Máximo 2</span>
+          </li>
+          <li class="rail__gate"><span>Exige DoD</span></li>
+          <li class="rail__stage">
+            <span class="rail__mark" aria-hidden="true">済</span>
+            <span class="rail__name">Hecho</span>
+            <span class="rail__meta">Sin límite</span>
+          </li>
+        </ol>
+
+        <dl class="rules__grid">
+          <div class="rule">
+            <dt><i class="ph ph-gauge" aria-hidden="true"></i>Límite WIP</dt>
+            <dd>Una columna llena no recibe más tareas. Cada límite se cambia desde el propio tablero.</dd>
+          </div>
+          <div class="rule">
+            <dt><i class="ph ph-list-checks" aria-hidden="true"></i>Definición de Listo</dt>
+            <dd>Para empezar, la tarea necesita descripción clara, responsable y criterios de aceptación.</dd>
+          </div>
+          <div class="rule">
+            <dt><i class="ph ph-seal-check" aria-hidden="true"></i>Definición de Hecho</dt>
+            <dd>Para cerrarla: código revisado, pruebas aprobadas y documentación al día. Entonces recibe su sello.</dd>
+          </div>
+          <div class="rule">
+            <dt><i class="ph ph-arrows-left-right" aria-hidden="true"></i>Columna vecina</dt>
+            <dd>Las tareas avanzan o retroceden de una en una. Ninguna etapa se salta.</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- Patrones -->
+      <section class="patterns" id="patrones" data-reveal>
+        <h2 class="section-title">Dos patrones de diseño sostienen cada movimiento.</h2>
+
+        <div class="bento">
+          <article class="bento__cell bento__cell--strategy">
+            <header class="pattern-head">
+              <i class="ph ph-strategy" aria-hidden="true"></i>
+              <h3>Strategy</h3>
+            </header>
+            <p>Cada regla es una clase con el mismo método <code>validate()</code>. El tablero solo pregunta; agregar una regla no lo modifica.</p>
+            <pre class="code" aria-label="Fragmento de código de Board.js"><code><span class="code__kw">for</span> (<span class="code__kw">const</span> policy <span class="code__kw">of</span> this.policies) {
+  <span class="code__kw">const</span> reason = policy.<span class="code__fn">validate</span>(context);
+  <span class="code__kw">if</span> (reason) <span class="code__kw">throw new</span> <span class="code__fn">PolicyViolationError</span>(reason);
+}</code></pre>
+            <ul class="tags" aria-label="Políticas implementadas">
+              <li>AdjacentColumnPolicy</li>
+              <li>WipLimitPolicy</li>
+              <li>DefinitionOfReadyPolicy</li>
+              <li>DefinitionOfDonePolicy</li>
+            </ul>
+          </article>
+
+          <article class="bento__cell bento__cell--observer">
+            <header class="pattern-head">
+              <i class="ph ph-broadcast" aria-hidden="true"></i>
+              <h3>Observer</h3>
+            </header>
+            <p>El tablero publica cada cambio en un <code>EventBus</code>. La vista y el panel de avisos lo escuchan sin que el tablero sepa que existen.</p>
+            <p class="bento__stat"><strong>8</strong> eventos publicados, desde <code>task:moved</code> hasta <code>wip:reached</code>.</p>
+          </article>
+
+          <article class="bento__cell bento__cell--flow">
+            <h3>Qué pasa al pulsar la flecha de una tarjeta</h3>
+            <ol class="flow">
+              <li><i class="ph ph-cursor-click" aria-hidden="true"></i><span>La vista pide el movimiento</span></li>
+              <li><i class="ph ph-shield-check" aria-hidden="true"></i><span>Cada política lo valida</span></li>
+              <li><i class="ph ph-swap" aria-hidden="true"></i><span>El tablero mueve la tarea</span></li>
+              <li><i class="ph ph-broadcast" aria-hidden="true"></i><span>Se publica el evento</span></li>
+              <li><i class="ph ph-arrows-clockwise" aria-hidden="true"></i><span>La interfaz se actualiza</span></li>
+            </ol>
+          </article>
+        </div>
+      </section>
+
+      <!-- Aplicación -->
+      <section class="app" id="tablero" aria-labelledby="tablero-titulo">
+        <div class="app__head">
+          <h2 class="section-title" id="tablero-titulo">Pruébalo aquí mismo.</h2>
+          <p class="app__note">Las tareas viven en memoria: al recargar la página vuelven las de ejemplo.</p>
+        </div>
+
+        <div class="app__layout">
+          <aside class="app__side">
+            <form id="task-form" class="panel form" novalidate>
+              <h3 class="panel__title" data-role="title">Nueva tarea</h3>
+              <div class="field">
+                <label for="f-title">Título</label>
+                <input id="f-title" name="title" required maxlength="80" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="f-description">Descripción</label>
+                <textarea id="f-description" name="description" rows="2" maxlength="200"></textarea>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="f-assignee">Responsable</label>
+                  <input id="f-assignee" name="assignee" maxlength="40" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-priority">Prioridad</label>
+                  <select id="f-priority" name="priority">
+                    <option value="baja">Baja</option>
+                    <option value="media" selected>Media</option>
+                    <option value="alta">Alta</option>
+                  </select>
+                </div>
+              </div>
+              <p class="form-error" data-role="error" role="alert" hidden></p>
+              <div class="form-actions">
+                <button type="submit" class="btn btn--primary">Crear tarea</button>
+                <button type="button" class="btn btn--ghost" data-role="cancel" hidden>Cancelar</button>
+              </div>
+            </form>
+
+            <div class="panel">
+              <h3 class="panel__title">Avisos del tablero</h3>
+              <ul id="alerts" class="alerts" aria-live="polite"></ul>
+            </div>
+          </aside>
+
+          <div id="board" class="board"></div>
+        </div>
+      </section>
     </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <span class="brand__seal" aria-hidden="true">看</span>
+          <p>Mini-tablero Kanban<br /><span>Universidad Manuela Beltrán, Ingeniería de Software</span></p>
+        </div>
+        <p class="footer__team">Grupo 6: Andrés Felipe Quijano Niño, Maria Camila Peralta Perez y Mateho Quesada Bustos.</p>
+        <a class="footer__link" href="https://github.com/Andres-Quijano/Grupo6_Mini-tableroKanban" target="_blank" rel="noopener">
+          <i class="ph ph-github-logo" aria-hidden="true"></i> Código en GitHub <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
 
     <script type="module" src="main.js"></script>
   </body>

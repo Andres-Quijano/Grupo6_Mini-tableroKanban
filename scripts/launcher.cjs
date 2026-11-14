@@ -34,6 +34,7 @@ const TYPES = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2',
 };
 
 /** Devuelve el contenido de un archivo de la app, o null si no existe. */

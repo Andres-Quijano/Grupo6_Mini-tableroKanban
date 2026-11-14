@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('../src/', import.meta.url));
 const PORT = process.env.PORT || 3000;
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml' };
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
 
 createServer(async (req, res) => {
   const path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^([/\\])+/, '');

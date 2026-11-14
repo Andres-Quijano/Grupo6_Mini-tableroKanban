@@ -62,12 +62,16 @@ y exigiendo checklists de DoR/DoD antes de iniciar o cerrar una tarea.
 | **Panel de notificaciones en tiempo real**: creación, edición, movimiento, bloqueos y columnas llenas | Entrega 2 | Observer |
 | Mensajes de error claros: qué política bloqueó y qué ítems faltan | Entrega 2 | Strategy + Observer |
 | Diseño adaptable a celular | Entrega 2 | — |
+| **Página de presentación (landing)** con la explicación de reglas y patrones, y el tablero integrado | Entrega 2 | — |
+| **Identidad visual propia** inspirada en el origen japonés de *kanban* (看板, "letrero"), con modo claro y oscuro | Entrega 2 | — |
+| Sello 済 en las tareas terminadas y animaciones de entrada, rechazo y cierre | Entrega 2 | Observer |
 
 ## 6. Tecnologías utilizadas
 
 | Tecnología | Uso |
 |---|---|
-| HTML5 + CSS3 | Interfaz del tablero |
+| HTML5 + CSS3 | Página de presentación y tablero, con modo claro y oscuro |
+| Archivo + JetBrains Mono (OFL) y Phosphor Icons (MIT) | Tipografías e íconos, incluidos en `src/assets/` para funcionar sin internet |
 | JavaScript (ES6+, módulos ES) | Lógica de dominio, patrones, controlador y vista, sin frameworks |
 | Node.js (≥ 18) | Servidor local de desarrollo y ejecución de pruebas |
 | Jest | Pruebas unitarias y de integración, con reporte de cobertura |
@@ -96,12 +100,13 @@ Grupo6_Mini-tableroKanban/
 ├── src/
 │   ├── index.html                    # Página principal
 │   ├── main.js                       # Punto de entrada: crea y conecta los componentes
-│   ├── styles.css                    # Estilos
+│   ├── styles.css                    # Identidad visual: tokens de color, tipografía, landing y tablero
+│   ├── assets/                       # Fuentes e íconos locales (generados con npm run vendor)
 │   ├── domain/                       # Modelos: Task, Column, Board, checklists
 │   ├── policies/                     # Strategy: MovePolicy y sus políticas concretas
 │   ├── notifier/                     # Observer: EventBus y catálogo de eventos
 │   ├── controller/                   # BoardController: puente entre vista y dominio
-│   ├── ui/                           # Componentes: BoardView, TaskForm, NotificationPanel, plantillas
+│   ├── ui/                           # Componentes: BoardView, TaskForm, NotificationPanel, plantillas, landing
 │   ├── utils/                        # Utilidades: errores del dominio, escapeHtml
 │   └── data/                         # Tareas de ejemplo
 │
@@ -109,7 +114,8 @@ Grupo6_Mini-tableroKanban/
 ├── scripts/
 │   ├── server.js                     # Servidor estático local para desarrollo (npm start)
 │   ├── launcher.cjs                  # Punto de entrada del ejecutable: sirve la app y abre el navegador
-│   └── build-exe.mjs                 # Genera dist/MiniTableroKanban.exe (npm run build:exe)
+│   ├── build-exe.mjs                 # Genera dist/MiniTableroKanban.exe (npm run build:exe)
+│   └── vendor-assets.mjs             # Copia fuentes e íconos a src/assets (npm run vendor)
 │
 ├── package.json
 ├── README.md
@@ -221,7 +227,7 @@ npm install
 npm start
 ```
 
-Abrir `http://localhost:3000`. El tablero carga tres tareas de ejemplo. Para probar los patrones:
+Abrir `http://localhost:3000`: primero aparece la página de presentación y, en la sección **Tablero** (botón *Abrir tablero*), la aplicación con tres tareas de ejemplo. Para probar los patrones:
 
 1. Pulsar `→` en *"Definir checklist DoD"*: se bloquea porque su DoR está incompleta (Strategy) y el panel lo avisa (Observer).
 2. Desplegar `DoR 1/3` en la tarjeta, marcar los ítems y volver a pulsar `→`: ahora avanza.

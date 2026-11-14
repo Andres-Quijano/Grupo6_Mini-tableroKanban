@@ -1,6 +1,6 @@
 # Descripción técnica del proyecto — Mini-tableroKanban
 
-Documento técnico de la solución. Actualizado en la **Entrega 2**.
+Documento técnico de la solución. **Versión final** del proyecto.
 
 ---
 
@@ -53,6 +53,7 @@ Usuario ──acción──▶ Vista web (UI) ──▶ Controlador ──ejecut
 - `TaskForm`: crea y edita tareas, y muestra errores de validación junto al formulario.
 - `NotificationPanel`: convierte cada evento del tablero en un mensaje para el equipo.
 - `templates.js`: funciones que generan el HTML de columnas, tarjetas y checklists.
+- `landing.js`: revela las secciones de la página de presentación al desplazarse (sin escuchar el scroll).
 - **No contiene reglas de negocio.**
 
 ### Controlador — `src/controller/BoardController.js`
@@ -100,7 +101,7 @@ oculte, y para que la aplicación se ejecute en cualquier navegador.
 |---|---|---|
 | **1 — Base del proyecto** | Repositorio, estructura, documentación, dominio básico (crear y mover tareas, límite WIP), vista mínima y pruebas. | ✅ |
 | **2 — Patrones Observer y Strategy** | EventBus y notificaciones en tiempo real; políticas WIP, DoR, DoD y columnas vecinas; checklists; edición de tareas; límite WIP configurable; diagramas y 60 pruebas. | ✅ |
-| **3 — Cierre** | Ver *Próximos avances* en el README. | Pendiente |
+| **3 — Versión final** | Página de presentación con identidad visual propia, rediseño del tablero (casilleros WIP, sello de tareas terminadas, animaciones, modo oscuro), recursos locales para funcionar sin internet, ejecutable para Windows, evidencias y presentación final. | ✅ |
 
 **Control de versiones:**
 

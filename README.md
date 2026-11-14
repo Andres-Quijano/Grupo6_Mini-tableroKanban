@@ -1,8 +1,10 @@
 # Mini-tableroKanban
 
-![Estado](https://img.shields.io/badge/estado-Entrega%202-blue) ![Lenguaje](https://img.shields.io/badge/JavaScript-ES6%2B-yellow) ![Pruebas](https://img.shields.io/badge/pruebas-60%20aprobadas-brightgreen) ![Patrones](https://img.shields.io/badge/patrones-Observer%20%C2%B7%20Strategy-purple)
+![Estado](https://img.shields.io/badge/estado-versi%C3%B3n%20final-c4351c) ![Lenguaje](https://img.shields.io/badge/JavaScript-ES6%2B-yellow) ![Pruebas](https://img.shields.io/badge/pruebas-60%20aprobadas-brightgreen) ![Patrones](https://img.shields.io/badge/patrones-Observer%20%C2%B7%20Strategy-purple)
 
-**Grupo 6** · Proyecto académico de la asignatura **Patrones de Diseño** — Universidad Manuela Beltrán, Ingeniería de Software.
+**Grupo 6** · Proyecto académico de la asignatura **Patrones de Diseño**, Universidad Manuela Beltrán, Ingeniería de Software.
+
+![Página de presentación del Mini-tablero Kanban](docs/evidencias/final/01_portada.png)
 
 ---
 
@@ -62,9 +64,10 @@ y exigiendo checklists de DoR/DoD antes de iniciar o cerrar una tarea.
 | **Panel de notificaciones en tiempo real**: creación, edición, movimiento, bloqueos y columnas llenas | Entrega 2 | Observer |
 | Mensajes de error claros: qué política bloqueó y qué ítems faltan | Entrega 2 | Strategy + Observer |
 | Diseño adaptable a celular | Entrega 2 | — |
-| **Página de presentación (landing)** con la explicación de reglas y patrones, y el tablero integrado | Entrega 2 | — |
-| **Identidad visual propia** inspirada en el origen japonés de *kanban* (看板, "letrero"), con modo claro y oscuro | Entrega 2 | — |
-| Sello 済 en las tareas terminadas y animaciones de entrada, rechazo y cierre | Entrega 2 | Observer |
+| **Página de presentación (landing)** con la explicación de reglas y patrones, y el tablero integrado | Versión final | — |
+| **Identidad visual propia** inspirada en el origen japonés de *kanban* (看板, "letrero"), con modo claro y oscuro | Versión final | — |
+| Sello 済 en las tareas terminadas y animaciones de entrada, rechazo y cierre | Versión final | Observer |
+| **Ejecutable para Windows** que funciona sin instalar Node.js ni tener internet | Versión final | — |
 
 ## 6. Tecnologías utilizadas
 
@@ -93,9 +96,11 @@ Grupo6_Mini-tableroKanban/
 │   │   ├── arquitectura.md           # Capas y dependencias
 │   │   ├── clases.md                 # Diagrama de clases UML
 │   │   └── secuencia_mover_tarea.md  # Cómo colaboran Strategy y Observer al mover una tarea
-│   └── evidencias/
-│       ├── entrega1/                 # Capturas de la primera entrega
-│       └── entrega2/                 # Resultado de pruebas y verificación manual
+│   ├── evidencias/
+│   │   ├── entrega1/                 # Capturas de la primera entrega
+│   │   ├── entrega2/                 # Resultado de pruebas y verificación manual
+│   │   └── final/                    # Capturas, pruebas y verificación de la versión final
+│   └── presentacion/                 # Presentación final en PowerPoint
 │
 ├── src/
 │   ├── index.html                    # Página principal
@@ -208,8 +213,27 @@ línea en `NotificationPanel`. Documentación completa: [`docs/patrones/observer
 | **Constantes de eventos** (`notifier/events.js`) | Evita errores de escritura en nombres de eventos. |
 | **Se descartó el patrón Command** | Decisión del equipo para concentrarse en Observer y Strategy; deshacer/rehacer queda fuera del alcance. |
 
+| **JavaScript sin frameworks** | Los patrones quedan visibles en el código y la app corre en cualquier navegador. |
+| **Estado en memoria** | El alcance es un prototipo para un equipo; evita una base de datos que no aporta a los patrones. |
+| **Ejecutable con Node.js SEA** | Permite demostrar la app con doble clic, sin instalar nada. |
+| **Fuentes e íconos locales** (`src/assets/`) | La app y el ejecutable funcionan sin conexión a internet. |
+
 Diagramas: [arquitectura](docs/diagramas/arquitectura.md) · [clases](docs/diagramas/clases.md) ·
 [secuencia al mover una tarea](docs/diagramas/secuencia_mover_tarea.md).
+
+### 8.4 Buenas prácticas de desarrollo
+
+| Práctica | Cómo se aplicó |
+|---|---|
+| **Separación de responsabilidades** | Una clase por regla (`src/policies/`), una por componente de vista (`src/ui/`); la vista no contiene reglas de negocio. |
+| **Principio abierto/cerrado** | Reglas nuevas se agregan como políticas y avisos nuevos como suscriptores, sin modificar `Board`. |
+| **Reutilización y cero duplicación** | DoR y DoD comparten `ChecklistPolicy`; las validaciones de `Task` están en funciones reutilizadas por constructor y `update`. |
+| **Manejo de errores** | `DomainError` y `PolicyViolationError`; el controlador traduce errores esperados y deja ver los de programación. |
+| **Pruebas automatizadas** | 60 pruebas con Jest y ~97 % de cobertura de la lógica; cada regla tiene un caso exitoso y uno de error. |
+| **Nombres claros** | Clases, métodos y eventos describen lo que hacen (`WipLimitPolicy`, `moveTask`, `wip:reached`). |
+| **Control de versiones** | Commits con prefijo (`feat`, `fix`, `refactor`, `test`, `docs`, `chore`) que muestran la evolución por entregas. |
+| **Seguridad básica** | `escapeHtml` evita que el texto del usuario se interprete como HTML; los servidores impiden leer archivos fuera de `src/`. |
+| **Accesibilidad** | Etiquetas en los campos, `aria-label` en los botones con ícono, avisos con `aria-live`, foco visible y respeto a *reducir movimiento*. |
 
 ## 9. Instrucciones de ejecución
 
@@ -264,8 +288,8 @@ npm test
 npm run test:coverage
 ```
 
-Resultado actual: **60 pruebas aprobadas** en 6 archivos, ~97 % de cobertura de la lógica.
-Detalle en [`docs/evidencias/entrega2/`](docs/evidencias/entrega2).
+Resultado: **60 pruebas aprobadas** en 6 archivos, ~97 % de cobertura de la lógica.
+Detalle y capturas de la versión final en [`docs/evidencias/final/`](docs/evidencias/final).
 
 ## 10. Integrantes del equipo
 
@@ -275,7 +299,7 @@ Detalle en [`docs/evidencias/entrega2/`](docs/evidencias/entrega2).
 | Maria Camila Peralta Perez | Colaborador · Scrum Team | mcamip |
 | Mateho Quesada Bustos | Colaborador · Scrum Team | maquebus-sys |
 
-## 11. Estado actual (Entrega 2)
+## 11. Estado final del proyecto
 
 - [x] Repositorio, estructura de carpetas y documentación.
 - [x] Modelo de dominio: `Task`, `Column`, `Board`.
@@ -286,12 +310,26 @@ Detalle en [`docs/evidencias/entrega2/`](docs/evidencias/entrega2).
 - [x] Límite WIP configurable desde el tablero.
 - [x] Diagramas de arquitectura, clases y secuencia.
 - [x] 60 pruebas automatizadas aprobadas.
+- [x] Página de presentación e identidad visual propia, con modo claro y oscuro.
+- [x] Ejecutable para Windows que funciona sin Node.js ni internet.
+- [x] Evidencias de funcionamiento de la versión final.
 
-## 12. Próximos avances (Entrega 3)
+## 12. Evolución del proyecto
 
-- [ ] Panel para activar o desactivar políticas desde la interfaz (aprovechando `addPolicy` / `removePolicy`).
-- [ ] Checklists DoR/DoD personalizables por el equipo.
-- [ ] Filtros por responsable y prioridad.
-- [ ] Historial de eventos de la sesión (un nuevo observador del `EventBus`).
-- [ ] Pruebas de la interfaz con un DOM simulado (jsdom).
-- [ ] Revisión de accesibilidad (teclado y lectores de pantalla).
+| Entrega | Qué se construyó |
+|---|---|
+| **1** | Repositorio, estructura, documentación inicial y primera versión: crear y mover tareas con límite WIP. |
+| **2** | Patrones Strategy y Observer, checklists DoR y DoD, edición de tareas, límite WIP configurable, diagramas UML y 60 pruebas. |
+| **Final** | Página de presentación, rediseño completo de la interfaz, recursos locales, ejecutable para Windows, evidencias y presentación. |
+
+El historial de commits del repositorio muestra cada paso con su prefijo (`feat`, `refactor`, `test`, `docs`…).
+
+## 13. Trabajo futuro
+
+Ideas que quedan fuera del alcance de la asignatura y que la arquitectura ya facilita:
+
+- Panel para activar o desactivar políticas desde la interfaz (aprovechando `addPolicy` / `removePolicy`).
+- Checklists DoR/DoD personalizables por el equipo.
+- Filtros por responsable y prioridad.
+- Historial de eventos de la sesión (un nuevo observador del `EventBus`).
+- Persistencia en el navegador o en una base de datos.

@@ -11,9 +11,14 @@ import { ANY_EVENT } from '../notifier/EventBus.js';
 import { EVENTS } from '../notifier/events.js';
 import { columnTemplate } from './templates.js';
 
+/** Eventos tras los cuales la tarjeta afectada se anima al aparecer. */
+const ENTRY_EVENTS = new Set([EVENTS.TASK_CREATED, EVENTS.TASK_MOVED]);
+
 export class BoardView {
   /** Tarjetas con los checklists desplegados, para mantenerlas abiertas al redibujar. */
   #openTaskIds = new Set();
+  /** Tarea recién creada o movida, que se resalta en el siguiente dibujo. */
+  #highlightId = null;
 
   /**
    * @param {HTMLElement} element  Contenedor del tablero.
@@ -32,7 +37,12 @@ export class BoardView {
     this.onError = onError;
 
     events.subscribe(ANY_EVENT, (event) => {
-      if (event.name !== EVENTS.MOVE_REJECTED) this.render();
+      if (event.name === EVENTS.MOVE_REJECTED) {
+        this.#shake(event.payload.task);
+        return;
+      }
+      this.#highlightId = ENTRY_EVENTS.has(event.name) ? event.payload.task.id : null;
+      this.render();
     });
 
     element.addEventListener('click', (e) => this.#onClick(e));
@@ -45,9 +55,23 @@ export class BoardView {
     const last = this.board.columns.length - 1;
     this.element.innerHTML = this.board.columns
       .map((column, index) =>
-        columnTemplate(column, { isFirst: index === 0, isLast: index === last, openTaskIds: this.#openTaskIds }),
+        columnTemplate(column, {
+          isFirst: index === 0,
+          isLast: index === last,
+          openTaskIds: this.#openTaskIds,
+          highlightId: this.#highlightId,
+        }),
       )
       .join('');
+  }
+
+  /** Sacude la tarjeta cuyo movimiento fue rechazado por una política. */
+  #shake(task) {
+    const card = task && this.element.querySelector(`.card[data-task="${task.id}"]`);
+    if (!card) return; // la tarea aún no existe en el tablero (creación rechazada)
+    card.classList.remove('card--rejected');
+    void card.offsetWidth; // reinicia la animación si se rechaza dos veces seguidas
+    card.classList.add('card--rejected');
   }
 
   #onClick(event) {

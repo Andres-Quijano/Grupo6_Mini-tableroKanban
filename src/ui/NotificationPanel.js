@@ -10,6 +10,9 @@ import { CHECKLISTS } from '../domain/checklists.js';
 
 const MAX_VISIBLE = 6;
 
+/** Ícono de cada tipo de aviso (Phosphor). */
+const ICONS = { success: 'check', info: 'info', warning: 'warning', error: 'prohibit' };
+
 /** Evento → { tipo de alerta, texto }. */
 const MESSAGES = {
   [EVENTS.TASK_CREATED]: ({ task, column }) => ['success', `Tarea #${task.id} creada en "${column.name}".`],
@@ -50,9 +53,20 @@ export class NotificationPanel {
   push(type, text, timestamp = new Date()) {
     const item = document.createElement('li');
     item.className = `alert alert--${type}`;
+
+    const icon = document.createElement('i');
+    icon.className = `ph ph-${ICONS[type] ?? 'info'}`;
+    icon.setAttribute('aria-hidden', 'true');
+
+    const body = document.createElement('div');
     const time = document.createElement('time');
-    time.textContent = timestamp.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    item.append(time, ' ', text);
+    time.dateTime = timestamp.toISOString();
+    time.textContent = timestamp.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    const message = document.createElement('p');
+    message.textContent = text;
+    body.append(time, message);
+
+    item.append(icon, body);
 
     this.list.prepend(item);
     while (this.list.children.length > MAX_VISIBLE) this.list.lastElementChild.remove();

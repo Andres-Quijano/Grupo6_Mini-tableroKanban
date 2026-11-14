@@ -1,0 +1,41 @@
+/* Subconjunto de Phosphor Icons (MIT, phosphoricons.com). Generado por scripts/vendor-assets.mjs. */
+@font-face {
+  font-family: "Phosphor";
+  src: url("./phosphor.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.ph {
+  font-family: "Phosphor" !important;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  speak: never;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ph-arrow-left::before { content: "\e058"; }
+.ph-arrow-right::before { content: "\e06c"; }
+.ph-arrow-up-right::before { content: "\e092"; }
+.ph-pencil-simple::before { content: "\e3b4"; }
+.ph-x::before { content: "\e4f6"; }
+.ph-plus::before { content: "\e3d4"; }
+.ph-check::before { content: "\e182"; }
+.ph-info::before { content: "\e2ce"; }
+.ph-warning::before { content: "\e4e0"; }
+.ph-prohibit::before { content: "\e3de"; }
+.ph-user::before { content: "\e4c2"; }
+.ph-github-logo::before { content: "\e576"; }
+.ph-gauge::before { content: "\e628"; }
+.ph-list-checks::before { content: "\eadc"; }
+.ph-seal-check::before { content: "\e606"; }
+.ph-arrows-left-right::before { content: "\e0a0"; }
+.ph-strategy::before { content: "\ea3a"; }
+.ph-broadcast::before { content: "\e0f2"; }
+.ph-cursor-click::before { content: "\e7c8"; }
+.ph-shield-check::before { content: "\e40c"; }
+.ph-swap::before { content: "\e83c"; }
+.ph-arrows-clockwise::before { content: "\e094"; }
